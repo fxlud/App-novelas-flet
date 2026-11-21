@@ -25,7 +25,13 @@ jobs:
         run: pip install flet
 
       - name: Build APK
-        run: flet build apk --yes --verbose
+        run: |
+          if [ -d "$HOME/Android/Sdk" ]; then
+            export ANDROID_HOME="$HOME/Android/Sdk"
+            export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
+          fi
+          yes | flutter doctor --android-licenses || true
+          flet build apk --yes --verbose
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -35,4 +41,3 @@ jobs:
           path: |
             build/apk/*.apk
             **/*.apk
-            
