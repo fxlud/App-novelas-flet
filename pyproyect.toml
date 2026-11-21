@@ -1,0 +1,13 @@
+[project]
+name = "app-novelas"
+version = "0.1.0"
+description = "App de novelas escrita con Flet"
+requires-python = ">=3.10"
+dependencies = [
+  "flet"
+]
+
+[tool.flet]
+org = "com.ludwin.novelas"
+product = "Crea Tu Historia"
+project = "app_novelas"
