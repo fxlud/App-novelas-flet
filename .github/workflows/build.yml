@@ -26,12 +26,17 @@ jobs:
 
       - name: Build APK
         run: |
-          if [ -d "$HOME/Android/Sdk" ]; then
-            export ANDROID_HOME="$HOME/Android/Sdk"
-            export ANDROID_SDK_ROOT="$HOME/Android/Sdk"
-          fi
-          yes | flutter doctor --android-licenses || true
+          set +e
           flet build apk --yes --verbose
+          EXIT_CODE=$?
+          set -e
+          if [ $EXIT_CODE -ne 0 ]; then
+            FLUTTER_BIN="/home/runner/flutter/3.47.9/bin/flutter"
+            if [ -x "$FLUTTER_BIN" ]; then
+              yes | "$FLUTTER_BIN" doctor --android-licenses || true
+            fi
+            flet build apk --yes --verbose
+          fi
 
       - name: Upload APK artifact
         uses: actions/upload-artifact@v4
@@ -41,3 +46,4 @@ jobs:
           path: |
             build/apk/*.apk
             **/*.apk
+            
